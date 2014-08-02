@@ -88,7 +88,7 @@ public class ImageProcessingSample extends Activity{
 		//中心のy座標
 		int middleY = size.y;
 		//x座標の差
-		int diffX = middleY;
+		int diffX = middleX;
 		//横方向に移動)
 	}
 	
