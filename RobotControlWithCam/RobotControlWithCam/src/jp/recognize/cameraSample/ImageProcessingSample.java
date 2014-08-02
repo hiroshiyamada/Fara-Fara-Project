@@ -37,6 +37,11 @@ public class ImageProcessingSample extends Activity{
 	ColorConvert mColorConvert=new ColorConvert();	//色変換用クラス
 	ColorConvert.YUVtoRGB mYUV2RGB;
 	int count=0;
+	String RIGHT = "1";
+	String LEFT = "2";
+	String FRONT = "3";
+	String BACK = "4";
+	String STOP = "5";
 	
 	CameraCallback mCameraCallback=null;
 	
@@ -93,28 +98,18 @@ public class ImageProcessingSample extends Activity{
 		int middleY = size.y;
 		//x座標の差の絶対値
 		int diffX = Math.abs(middleX - width);
+		//y座標の差の絶対値
+		int diffY = Math.abs(middleY - width);
 		//横方向に移動
-		sendCommand("3");
-		count=1;
+		if(diffX > 10){
+			moveTrashMotor(LEFT,1000);
+		}
+		//縦方向に移動
+		if(diffY > 10){
+			moveTrashMotor(FRONT,1000);
+		}
 	}
         
-	
-	private class GraphicsView extends View{
-		Paint paint;
-		public GraphicsView(Context c){
-			super(c);
-			paint=new Paint();
-		}
-		
-		@Override
-		protected void onDraw(Canvas canvas){
-		
-			
-			
-		}
-	}
-	
-	
 	
 	//独自プレビュー画面
 	/*private class GraphicsView extends View{
@@ -180,9 +175,21 @@ public class ImageProcessingSample extends Activity{
 			  }
 		}
 	}
+	
+	//左に動かす
+	public void moveTrashMotor(String num, long time) {
+		sendCommand(num);
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sendCommand(STOP);
+	}
 	boolean mLightFlag=false;
 	//画面にタッチされた際の処理
-	public boolean onTouchEvent(MotionEvent event) {
+	/*public boolean onTouchEvent(MotionEvent event) {
 	    switch (event.getAction()) {
 	    case MotionEvent.ACTION_DOWN:
 	        break;
@@ -211,7 +218,7 @@ public class ImageProcessingSample extends Activity{
 	        break;
 	    }
 	    return super.onTouchEvent(event);
-	}
+	}*/
 	
 	int mScreenWidth=0;
 	int mScreenHeight=0;
@@ -247,3 +254,11 @@ public class ImageProcessingSample extends Activity{
 	}
 
 }
+
+        
+
+
+	
+
+
+
