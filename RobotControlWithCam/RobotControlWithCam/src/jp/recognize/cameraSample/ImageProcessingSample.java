@@ -77,21 +77,6 @@ public class ImageProcessingSample extends Activity{
 	int mZoom=0;
         
 	
-	private class GraphicsView extends View{
-		Paint paint;
-		public GraphicsView(Context c){
-			super(c);
-			paint=new Paint();
-		}
-		
-		@Override
-		protected void onDraw(Canvas canvas){
-		
-			
-			
-		}
-	}
-	
 	
 	
 	//独自プレビュー画面
