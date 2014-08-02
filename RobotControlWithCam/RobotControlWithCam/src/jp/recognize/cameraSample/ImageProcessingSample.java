@@ -75,9 +75,9 @@ public class ImageProcessingSample extends Activity{
 		manager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		// Find the first available driver.
 		driver = UsbSerialProber.acquire(manager);
-		
 		//カメラ映像の表示
 		mCameraCallback=new CameraCallback(this);
+		trashControl();
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
@@ -85,7 +85,7 @@ public class ImageProcessingSample extends Activity{
 
 	int mZoom=0;
 	
-	public void trashControl(int width, int height){
+	public void trashControl(){
 		//Android画面サイズ取得
 		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
 		// ディスプレイのインスタンス生成
@@ -96,17 +96,24 @@ public class ImageProcessingSample extends Activity{
 		int middleX = size.x;
 		//中心のy座標
 		int middleY = size.y;
-		//x座標の差の絶対値
-		int diffX = Math.abs(middleX - width);
-		//y座標の差の絶対値
-		int diffY = Math.abs(middleY - width);
-		//横方向に移動
-		if(diffX > 10){
-			moveTrashMotor(LEFT,1000);
-		}
-		//縦方向に移動
-		if(diffY > 10){
-			moveTrashMotor(FRONT,1000);
+		int diffX = 20;
+		int diffY = 20;
+		while(diffX > 10 || diffY > 10){
+			int cenwidth = mCameraCallback.getCenterPointX();
+			int cenheight = mCameraCallback.getCenterPointY();
+			//x座標の差の絶対値
+			diffX = Math.abs(middleX - cenwidth);
+			//y座標の差の絶対値
+			diffY = Math.abs(middleY - cenheight);
+			//横方向に移動
+			if(diffX > 10){
+				moveTrashMotor(LEFT,1000);
+			}
+			//縦方向に移動
+			if(diffY > 10){
+				moveTrashMotor(FRONT,1000);
+			}
+			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 	}
 	
