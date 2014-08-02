@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.hardware.Camera.Face;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +32,7 @@ public class ImageProcessingSample extends Activity{
 	ColorConvert mColorConvert=new ColorConvert();	//色変換用クラス
 	ColorConvert.YUVtoRGB mYUV2RGB;
 	int count=0;
-
+	
 	CameraCallback mCameraCallback=null;
 	
 	SmartBot mySmartBot;
@@ -72,6 +75,25 @@ public class ImageProcessingSample extends Activity{
 	}
 
 	int mZoom=0;
+        
+	
+	private class GraphicsView extends View{
+		Paint paint;
+		public GraphicsView(Context c){
+			super(c);
+			paint=new Paint();
+		}
+		
+		@Override
+		protected void onDraw(Canvas canvas){
+		
+			
+			
+		}
+	}
+	
+	
+	
 	//独自プレビュー画面
 	/*private class GraphicsView extends View{
 		Paint paint;
