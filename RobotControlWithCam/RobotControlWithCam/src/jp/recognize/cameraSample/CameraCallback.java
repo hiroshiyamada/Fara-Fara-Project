@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.Face;
 import android.hardware.Camera.FaceDetectionListener;
 import android.hardware.Camera.Size;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 public class CameraCallback extends SurfaceView implements Camera.PreviewCallback,SurfaceHolder.Callback{
 
@@ -22,15 +25,26 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	int faceCenterPointY = 0;
 	int tmpX=0;
 	int tmpY=0;
+	String RIGHT = "1";
+	String LEFT = "2";
+	String FRONT = "3";
+	String BACK = "4";
+	String STOP = "5";
+	ImageProcessingSample imageSample=null;
+	Context context;
+	int middleX,middleY;
+	
 
 	private ImageProcessingSample mClass=null;
 	Camera _camera;
-	public CameraCallback(ImageProcessingSample c) {		//描画画面の準備
+	public CameraCallback(ImageProcessingSample c, int cenwidth, int cenheight) {		//描画画面の準備
 		super((Context)c);
 		mClass=c;
 		SurfaceHolder sHolder = getHolder();
 		sHolder.addCallback(this);
 		sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		middleX = cenwidth;
+		middleY = cenheight;
 		this.setFocusable(true);
 		this.requestFocus();
 	}
@@ -45,7 +59,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	}
 	public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){
 		Size previewSize=setPreviewSize(720,480);
-		
+
 		mClass.initImageData(previewSize.width, previewSize.height, width, height);
 		try {_camera.setPreviewDisplay(holder);}
 		catch (IOException e) {}
@@ -77,12 +91,13 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					if(i == 1){
 						faceCenterPointX = (face.rect.right + face.rect.left)/2;
 						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+						trashControl(faceCenterPointX,faceCenterPointY);
 					}
-					
-					
+
+
 					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
-					
-					
+
+
 					// 以下はサポートされていなければnullが入ってくる
 					if (face.mouth != null) {
 						Log.d(TAG, "face mouth: " + face.mouth.x + "," + face.mouth.y);
@@ -104,24 +119,43 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 
 	}
 
-	
+
 	public int getCenterPointX(){
 		return faceCenterPointX;
 	}
-	
+
 	public int getCenterPointY(){
 		return faceCenterPointY;
 	}
-	
+
 	public int faceCount(){
 		return faceCount;
 	}
-	
+
 	public int faceConfidence(){
 		return faceConfidence;
 	}
-	
-	
+
+	public void trashControl(int cenwidth, int cenheight){
+		Log.d(TAG, "testttttttttttttttttttttt");
+
+		//x座標の差の絶対値
+		int diffX = Math.abs(middleX - cenwidth);
+		//y座標の差の絶対値
+		int diffY = Math.abs(middleY - cenheight);
+		Log.d("beforeDiff", String.valueOf(diffX));
+		//横方向に移動
+		if(diffX > 10){
+			//imageSample.moveTrashMotor(LEFT,1000);
+			Log.d("centerDiff!!", String.valueOf(diffX));
+		}
+		//縦方向に移動
+		if(diffY > 10){
+			//imageSample.moveTrashMotor(FRONT,1000);
+			Log.d("centerDiff!!", String.valueOf(diffX));
+		}
+	}
+
 	//プレビューサイズの設定
 	public Size setPreviewSize(int width, int height) {
 		Camera.Parameters parameters = _camera.getParameters();
