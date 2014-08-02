@@ -109,7 +109,6 @@ public class ImageProcessingSample extends Activity{
 			moveTrashMotor(FRONT,1000);
 		}
 	}
-        
 	
 	//独自プレビュー画面
 	/*private class GraphicsView extends View{

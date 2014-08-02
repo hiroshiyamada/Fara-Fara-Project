@@ -1,6 +1,7 @@
 package jp.recognize.cameraSample;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.hardware.Camera;
@@ -15,10 +16,12 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 
 	private static final String TAG = "CameraFaceDetect";	
 
-	int faceCount = 0;
+	int faceCount = 0; 
 	int faceConfidence = 0;
-	int faceCenterPointX;
-	int faceCenterPointY;
+	int faceCenterPointX = 0;
+	int faceCenterPointY = 0;
+	int tmpX=0;
+	int tmpY=0;
 
 	private ImageProcessingSample mClass=null;
 	Camera _camera;
@@ -42,6 +45,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	}
 	public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){
 		Size previewSize=setPreviewSize(720,480);
+		
 		mClass.initImageData(previewSize.width, previewSize.height, width, height);
 		try {_camera.setPreviewDisplay(holder);}
 		catch (IOException e) {}
@@ -56,20 +60,29 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 			public void onFaceDetection(Face[] faces, Camera camera) {
 				Log.d(TAG, "faces count: " + faces.length);
 				faceCount = faces.length;
+				int i = 0;
 				for (Face face : faces) {
+					i++;
+
 					// サポートされていなければ-1が常に返ってくる
 					Log.d(TAG, "face id: " + face.id);
 
 					// 顔検出の信頼度 1から100までの値が入っており、100が顔として信頼度が一番高い
 					Log.d(TAG, "face score: " + face.score);
-					faceConfidence = face.score;
+					//faceConfidence = face.score;
 
 					// 検出された顔の範囲
 					Log.d(TAG, "face rect: " + face.rect.left + "," + face.rect.top + " - "
-							+ face.rect.right + "," + face.rect.bottom);                    
-					faceCenterPointX = face.rect.right - face.rect.left;
-					faceCenterPointY = face.rect.bottom - face.rect.top;
-
+							+ face.rect.right + "," + face.rect.bottom);
+					if(i == 1){
+						faceCenterPointX = face.rect.right - face.rect.left;
+						faceCenterPointY = face.rect.bottom - face.rect.top;
+					}
+					
+					
+					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
+					
+					
 					// 以下はサポートされていなければnullが入ってくる
 					if (face.mouth != null) {
 						Log.d(TAG, "face mouth: " + face.mouth.x + "," + face.mouth.y);
@@ -91,6 +104,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 
 	}
 
+	
 	public int getCenterPointX(){
 		return faceCenterPointX;
 	}
@@ -106,6 +120,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	public int faceConfidence(){
 		return faceConfidence;
 	}
+	
 	
 	//プレビューサイズの設定
 	public Size setPreviewSize(int width, int height) {
