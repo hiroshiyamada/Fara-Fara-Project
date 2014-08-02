@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.Face;
 import android.hardware.Camera.FaceDetectionListener;
@@ -99,9 +100,13 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					Log.d(TAG, "face rect: " + face.rect.left + "," + face.rect.top + " - "
 							+ face.rect.right + "," + face.rect.bottom);
 
+					Rect rect = faceRect2PixelRect(face);
+					
 					if(i == 1){
-						faceCenterPointX = (face.rect.right + face.rect.left)/2;
-						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+//						faceCenterPointX = (face.rect.right + face.rect.left)/2;
+//						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+						faceCenterPointX = (rect.right + rect.left)/2;
+						faceCenterPointY = (rect.bottom + rect.top)/2;
 					}
 
 					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
@@ -129,6 +134,29 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	}
 
 
+    /**
+     * 顔認識範囲を描画用に座標変換する。
+     * - Face.rect の座標系はプレビュー画像に対し -1000～1000 の相対座標。
+     * - 座標(-1000,-1000)が左上、座標(0,0) が画像中心となる。
+     * - 座標系のプレビュー画像はlandscapeとなる。portraitの場合が90度回転が必要。
+     * @param face 顔認識情報
+     * @return 描画用矩形範囲
+     */
+    private Rect faceRect2PixelRect(Face face) {
+        int w = 1064;
+        int h = 640;
+        Rect rect = new Rect();
+
+        // フロントカメラなので左右反転、portraitなので座標軸反転
+        rect.left = w * (-face.rect.top + 1000) / 2000;
+        rect.right = w * (-face.rect.bottom + 1000) / 2000;
+        rect.top = h * (-face.rect.right + 1000) / 2000;
+        rect.bottom = h * (-face.rect.left + 1000) / 2000;
+        //Log.d(TAG, "rect=" + face.rect + "=>" + rect);
+        return rect;
+    }
+
+	
 	public int getCenterPointX(){
 		return faceCenterPointX;
 	}
@@ -145,23 +173,24 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		return faceConfidence;
 	}
 
-	public void trashControl(int cenwidth, int cenheight){
-		Log.d(TAG, "testttttttttttttttttttttt,"+middleX+","+middleY);
-		
+	public void trashControl(int cenwidth, int cenheight){		
+		Log.d(TAG, "testttttttttttttttttttttt,"+middleX+"vs"+cenwidth+","+middleY+"vs"+cenheight);
+
 		//x座標の差の絶対値
 		int diffX = Math.abs(middleX - cenwidth);
+		
 		//y座標の差の絶対値
 		int diffY = Math.abs(middleY - cenheight);
-		Log.d("beforeDiff", String.valueOf(diffX));
+		Log.d(TAG,"beforeDiff" +String.valueOf(diffX));
 		//横方向に移動
 		if(diffX > 10){
 			imageSample.moveTrashMotor(LEFT,1000);
-			Log.d("centerDiff!!", String.valueOf(diffX));
+			Log.d(TAG,"centerDiff!!"+String.valueOf(diffX));
 		}
 		//縦方向に移動
 		if(diffY > 10){
 			imageSample.moveTrashMotor(FRONT,1000);
-			Log.d("centerDiff!!", String.valueOf(diffX));
+			Log.d(TAG,"centerDiff!!"+String.valueOf(diffX));
 		}
 	}
 	

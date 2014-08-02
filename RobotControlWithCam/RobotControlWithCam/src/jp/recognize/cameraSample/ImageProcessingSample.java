@@ -204,7 +204,7 @@ public class ImageProcessingSample extends Activity{
 	//左に動かす
 	public void moveTrashMotor(String num, long time) {
 		sendCommand(num);
-		Log.d("test","Check!!!");
+		Log.d("test","moter");
 		//try {
 //			Thread.sleep(time);
 //			
