@@ -265,6 +265,7 @@ public class ImageProcessingSample extends Activity{
 
 
 	//画像処理
+	/*
 	public void recognition(byte yuv[]) {
 		mYUV2RGB.getFast(yuv, mIntImage);
 		if (mRecogBitmap == null)
@@ -276,6 +277,7 @@ public class ImageProcessingSample extends Activity{
 		count--;
 		if(count==0)sendCommand("5");//stop
 	}
+	*/
 
 }
 

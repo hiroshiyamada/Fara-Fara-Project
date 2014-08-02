@@ -66,8 +66,8 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		
 		
 		//paramsize
-		//Size previewSize=setPreviewSize(720,480);
-		Size previewSize=setPreviewSize(523,480);
+		Size previewSize=setPreviewSize(720,480);
+		//Size previewSize=setPreviewSize(523,480);
 				
 		mClass.initImageData(previewSize.width, previewSize.height, width, height);
 		try {_camera.setPreviewDisplay(holder);}
@@ -94,8 +94,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 
 					// 顔検出の信頼度 1から100までの値が入っており、100が顔として信頼度が一番高い
 					Log.d(TAG, "face score: " + face.score);
-					//faceConfidence = face.score;
-
+					
 					// 検出された顔の範囲
 					Log.d(TAG, "face rect: " + face.rect.left + "," + face.rect.top + " - "
 							+ face.rect.right + "," + face.rect.bottom);
@@ -107,7 +106,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					}
 
 					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
-					trashControl(faceCenterPointX,faceCenterPointY);
+					//trashControl(faceCenterPointX,faceCenterPointY);
 
 					// 以下はサポートされていなければnullが入ってくる
 					if (face.mouth != null) {
@@ -157,12 +156,12 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		Log.d("beforeDiff", String.valueOf(diffX));
 		//横方向に移動
 		if(diffX > 10){
-			imageSample.moveTrashMotor(LEFT,1000);
+		//	imageSample.moveTrashMotor(LEFT,1000);
 			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 		//縦方向に移動
 		if(diffY > 10){
-			imageSample.moveTrashMotor(FRONT,1000);
+			//imageSample.moveTrashMotor(FRONT,1000);
 			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 	}
@@ -171,6 +170,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	public Size setPreviewSize(int width, int height) {
 		Camera.Parameters parameters = _camera.getParameters();
 		parameters.setPreviewSize(width , height );
+		Log.d(TAG,"Check!!!");
 		try{
 			_camera.setParameters(parameters);
 		}catch(Exception e){
@@ -183,7 +183,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	public void onPreviewFrame(byte[] data, Camera camera) {
 
 		stopPreviewCallback();
-		mClass.recognition(data);
+		//mClass.recognition(data);
 		startPreviewCallback();
 		invalidate();//再描画
 	}
