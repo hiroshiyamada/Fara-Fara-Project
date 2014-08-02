@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -71,7 +74,6 @@ public class ImageProcessingSample extends Activity{
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
-
 	}
 
 	int mZoom=0;
@@ -87,13 +89,15 @@ public class ImageProcessingSample extends Activity{
 		int middleX = size.x;
 		//中心のy座標
 		int middleY = size.y;
-		//x座標の差
-		int diffX = middleX;
-		//横方向に移動)
+		//x座標の差の絶対値
+		int diffX = Math.abs(middleX - width);
+		//横方向に移動
+		sendCommand("3");
+		count=1;
 	}
 	
 	//独自プレビュー画面
-	/*private class GraphicsView extends View{
+	private class GraphicsView extends View{
 		Paint paint;
 		public GraphicsView(Context c){
 			super(c);
@@ -102,7 +106,7 @@ public class ImageProcessingSample extends Activity{
 		@Override
 		protected void onDraw(Canvas canvas){
 			if(mIntImage==null)return;
-			//canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
+			canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
 			
 			if(mZoom==1){
 				canvas.scale(mScaleWidth, mScaleHeight);//画面にあわせて拡大
@@ -133,12 +137,7 @@ public class ImageProcessingSample extends Activity{
 			paint.setStyle(Paint.Style.FILL);
 		}
 
-<<<<<<< HEAD
 	}
-		
-	
-=======
-	}*/
 
 	
 	public void sendCommand(String stCommand){
@@ -163,7 +162,7 @@ public class ImageProcessingSample extends Activity{
 	}
 	boolean mLightFlag=false;
 	//画面にタッチされた際の処理
-	/*public boolean onTouchEvent(MotionEvent event) {
+	public boolean onTouchEvent(MotionEvent event) {
 	    switch (event.getAction()) {
 	    case MotionEvent.ACTION_DOWN:
 	        break;
@@ -192,7 +191,7 @@ public class ImageProcessingSample extends Activity{
 	        break;
 	    }
 	    return super.onTouchEvent(event);
-	}*/
+	}
 	
 	int mScreenWidth=0;
 	int mScreenHeight=0;
