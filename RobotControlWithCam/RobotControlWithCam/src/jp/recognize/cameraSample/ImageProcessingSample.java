@@ -7,14 +7,17 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Point;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.overdriverobotics.smartbotsdk.SmartBot;
@@ -70,6 +73,23 @@ public class ImageProcessingSample extends Activity {
 	}
 
 	int mZoom=0;
+	
+	public void trashControl(int width, int height){
+		//Android画面サイズ取得
+		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+		// ディスプレイのインスタンス生成
+		Display disp = wm.getDefaultDisplay();
+		Point size = new Point();
+		disp.getSize(size);
+		//中心のx座標
+		int middleX = size.x;
+		//中心のy座標
+		int middleY = size.y;
+		//x座標の差
+		int diffX = a;
+		//横方向に移動)
+	}
+	
 	//独自プレビュー画面
 	/*private class GraphicsView extends View{
 		Paint paint;
@@ -138,7 +158,7 @@ public class ImageProcessingSample extends Activity {
 	}
 	boolean mLightFlag=false;
 	//画面にタッチされた際の処理
-	public boolean onTouchEvent(MotionEvent event) {
+	/*public boolean onTouchEvent(MotionEvent event) {
 	    switch (event.getAction()) {
 	    case MotionEvent.ACTION_DOWN:
 	        break;
@@ -167,7 +187,7 @@ public class ImageProcessingSample extends Activity {
 	        break;
 	    }
 	    return super.onTouchEvent(event);
-	}
+	}*/
 	
 	int mScreenWidth=0;
 	int mScreenHeight=0;
