@@ -22,7 +22,10 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	int faceCenterPointY = 0;
 	int tmpX=0;
 	int tmpY=0;
-
+	int DiffX = 20;
+	int DiffY = 20;
+	
+	
 	private ImageProcessingSample mClass=null;
 	Camera _camera;
 	public CameraCallback(ImageProcessingSample c) {		//描画画面の準備
@@ -76,26 +79,19 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 							+ face.rect.right + "," + face.rect.bottom);
 
 
-					if(i == 1){	
+					if(i == 1){
 						faceCenterPointX = (face.rect.right + face.rect.left)/2;
 						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
-						tmpX = 0;
 
-						if(i == 1){
-							faceCenterPointX = (face.rect.right + face.rect.left)/2;
-							faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
-						}
+					}
 
+					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
 
-						Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
-
-
-						// 以下はサポートされていなければnullが入ってくる
-						if (face.mouth != null) {
-							Log.d(TAG, "face mouth: " + face.mouth.x + "," + face.mouth.y);
-							Log.d(TAG, "face leftEye: " + face.leftEye.x + "," + face.leftEye.y);
-							Log.d(TAG, "face rightEye: " + face.rightEye.x + "," + face.rightEye.y);
-						}
+					// 以下はサポートされていなければnullが入ってくる
+					if (face.mouth != null) {
+						Log.d(TAG, "face mouth: " + face.mouth.x + "," + face.mouth.y);
+						Log.d(TAG, "face leftEye: " + face.leftEye.x + "," + face.leftEye.y);
+						Log.d(TAG, "face rightEye: " + face.rightEye.x + "," + face.rightEye.y);
 					}
 				}
 			}

@@ -76,8 +76,13 @@ public class ImageProcessingSample extends Activity{
 		// Find the first available driver.
 		driver = UsbSerialProber.acquire(manager);
 		//カメラ映像の表示
+		
+		
+		
 		mCameraCallback=new CameraCallback(this);
+		
 		trashControl();
+		
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
@@ -98,10 +103,16 @@ public class ImageProcessingSample extends Activity{
 		int middleY = size.y;
 		int diffX = 20;
 		int diffY = 20;
+		
+		
 		while(diffX > 10 || diffY > 10){
-			int cenwidth = mCameraCallback.getCenterPointX();
-			int cenheight = mCameraCallback.getCenterPointY();
-			//x座標の差の絶対値
+			
+			//int cenwidth = mCameraCallback.getCenterPointX();
+			//int cenheight = mCameraCallback.getCenterPointY();
+			int cenwidth = 0;
+			int cenheight = 0;
+			
+					//x座標の差の絶対値
 			diffX = Math.abs(middleX - cenwidth);
 			//y座標の差の絶対値
 			diffY = Math.abs(middleY - cenheight);
@@ -113,7 +124,6 @@ public class ImageProcessingSample extends Activity{
 			if(diffY > 10){
 				moveTrashMotor(FRONT,1000);
 			}
-			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 	}
 	
