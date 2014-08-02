@@ -97,7 +97,7 @@ public class ImageProcessingSample extends Activity{
 	}
 	
 	//独自プレビュー画面
-	private class GraphicsView extends View{
+	/*private class GraphicsView extends View{
 		Paint paint;
 		public GraphicsView(Context c){
 			super(c);
@@ -137,7 +137,7 @@ public class ImageProcessingSample extends Activity{
 			paint.setStyle(Paint.Style.FILL);
 		}
 
-	}
+	}*/
 
 	
 	public void sendCommand(String stCommand){
