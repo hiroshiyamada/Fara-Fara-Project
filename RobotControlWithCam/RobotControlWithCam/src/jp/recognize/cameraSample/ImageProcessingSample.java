@@ -15,6 +15,7 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -27,7 +28,7 @@ import com.overdriverobotics.smartbotsdk.SmartBot;
 
 
 
-public class ImageProcessingSample extends Activity {
+public class ImageProcessingSample extends FaceRecognitionActivity{
 	int mPreviewWidth=640,mPreviewHeight=480;		//カメラのプレビューサイズ
 	float mScaleWidth, mScaleHeight;				//画面サイズとプレビューサイズの比率
 	int mIntImage[]=null;							//ARGB8888の画像格納用
@@ -43,10 +44,11 @@ public class ImageProcessingSample extends Activity {
 	UsbSerialDriver driver;
 	
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.main);//元々の表示画面をコメントアウト
 		//画面の向きを横で固定
-		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		//全画面表示
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//スリープ無効
@@ -113,13 +115,11 @@ public class ImageProcessingSample extends Activity {
 			
 			paint.setColor(Color.RED);
 			paint.setStyle(Paint.Style.FILL);
-
-
-			
-
 		}
 
 	}
+		
+	
 	public void sendCommand(String stCommand){
 		if (driver != null) {
 			  try {

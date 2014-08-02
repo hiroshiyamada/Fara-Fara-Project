@@ -4,11 +4,16 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.Face;
 import android.hardware.Camera.Size;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class CameraCallback extends SurfaceView implements Camera.PreviewCallback,SurfaceHolder.Callback{
+	
+	private static final String TAG = "CameraFaceDetect";	
+	
 	private ImageProcessingSample mClass=null;
 	 Camera _camera;
 	public CameraCallback(ImageProcessingSample c) {		//描画画面の準備
@@ -36,6 +41,8 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		catch (IOException e) {}
 		_camera.startPreview();
 		startPreviewCallback();
+		
+		
 	}
 	//プレビューサイズの設定
 	public Size setPreviewSize(int width, int height) {
