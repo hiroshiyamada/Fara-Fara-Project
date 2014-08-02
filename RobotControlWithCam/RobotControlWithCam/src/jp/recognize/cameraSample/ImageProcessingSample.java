@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -24,7 +25,7 @@ import com.overdriverobotics.smartbotsdk.SmartBot;
 
 
 
-public class ImageProcessingSample extends Activity {
+public class ImageProcessingSample extends Activity{
 	int mPreviewWidth=640,mPreviewHeight=480;		//カメラのプレビューサイズ
 	float mScaleWidth, mScaleHeight;				//画面サイズとプレビューサイズの比率
 	int mIntImage[]=null;							//ARGB8888の画像格納用
@@ -42,6 +43,7 @@ public class ImageProcessingSample extends Activity {
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.main);//元々の表示画面をコメントアウト
 		//画面の向きを横で固定
@@ -86,7 +88,7 @@ public class ImageProcessingSample extends Activity {
 		//中心のy座標
 		int middleY = size.y;
 		//x座標の差
-		int diffX = a;
+		int diffX = middleY;
 		//横方向に移動)
 	}
 	
@@ -129,13 +131,16 @@ public class ImageProcessingSample extends Activity {
 			
 			paint.setColor(Color.RED);
 			paint.setStyle(Paint.Style.FILL);
-
-
-			
-
 		}
 
+<<<<<<< HEAD
+	}
+		
+	
+=======
 	}*/
+
+	
 	public void sendCommand(String stCommand){
 		if (driver != null) {
 			  try {
