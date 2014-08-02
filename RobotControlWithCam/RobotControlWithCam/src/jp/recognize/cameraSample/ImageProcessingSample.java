@@ -1,16 +1,12 @@
 package jp.recognize.cameraSample;
 
 
-import java.net.URL;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,15 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
-
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.overdriverobotics.smartbotsdk.SmartBot;
 
 
 
-public class ImageProcessingSample extends FaceRecognitionActivity{
+public class ImageProcessingSample extends Activity{
 	int mPreviewWidth=640,mPreviewHeight=480;		//カメラのプレビューサイズ
 	float mScaleWidth, mScaleHeight;				//画面サイズとプレビューサイズの比率
 	int mIntImage[]=null;							//ARGB8888の画像格納用
@@ -43,12 +37,14 @@ public class ImageProcessingSample extends FaceRecognitionActivity{
 	UsbManager manager;
 	UsbSerialDriver driver;
 	
+	@SuppressLint("InlinedApi")
+	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.main);//元々の表示画面をコメントアウト
 		//画面の向きを横で固定
-		//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		//全画面表示
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//スリープ無効
@@ -71,13 +67,13 @@ public class ImageProcessingSample extends FaceRecognitionActivity{
 		mCameraCallback=new CameraCallback(this);
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
-		addContentView(new GraphicsView(this), layoutParams);
+		addContentView(new View(this), layoutParams);
 
 	}
 
 	int mZoom=0;
 	//独自プレビュー画面
-	private class GraphicsView extends View{
+	/*private class GraphicsView extends View{
 		Paint paint;
 		public GraphicsView(Context c){
 			super(c);
@@ -86,7 +82,7 @@ public class ImageProcessingSample extends FaceRecognitionActivity{
 		@Override
 		protected void onDraw(Canvas canvas){
 			if(mIntImage==null)return;
-			canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
+			//canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
 			
 			if(mZoom==1){
 				canvas.scale(mScaleWidth, mScaleHeight);//画面にあわせて拡大
@@ -117,8 +113,13 @@ public class ImageProcessingSample extends FaceRecognitionActivity{
 			paint.setStyle(Paint.Style.FILL);
 		}
 
+<<<<<<< HEAD
 	}
 		
+	
+=======
+	}*/
+
 	
 	public void sendCommand(String stCommand){
 		if (driver != null) {
@@ -162,7 +163,6 @@ public class ImageProcessingSample extends FaceRecognitionActivity{
 	    	else if(mScreenWidth-mScreenWidth/4 < x && y< mScreenHeight/2)sendCommand("5");//stop
 	    	
 	    	if(mScreenWidth/4 < x && x< mScreenWidth-mScreenWidth/4 &&y< mScreenHeight/2)mZoom=(mZoom+1)%2;
-	
 	    	//mCameraCallback.autoFocus();
 	    	
 	        break;
