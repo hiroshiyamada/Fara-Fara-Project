@@ -45,7 +45,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	}
 	public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){
 		Size previewSize=setPreviewSize(720,480);
-		
+
 		mClass.initImageData(previewSize.width, previewSize.height, width, height);
 		try {_camera.setPreviewDisplay(holder);}
 		catch (IOException e) {}
@@ -74,24 +74,28 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					// 検出された顔の範囲
 					Log.d(TAG, "face rect: " + face.rect.left + "," + face.rect.top + " - "
 							+ face.rect.right + "," + face.rect.bottom);
-					
-					
+
+
 					if(i == 1){	
 						faceCenterPointX = (face.rect.right + face.rect.left)/2;
 						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
 						tmpX = 0;
-						
-					}
-					
-					
-					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
-					
-					
-					// 以下はサポートされていなければnullが入ってくる
-					if (face.mouth != null) {
-						Log.d(TAG, "face mouth: " + face.mouth.x + "," + face.mouth.y);
-						Log.d(TAG, "face leftEye: " + face.leftEye.x + "," + face.leftEye.y);
-						Log.d(TAG, "face rightEye: " + face.rightEye.x + "," + face.rightEye.y);
+
+						if(i == 1){
+							faceCenterPointX = (face.rect.right + face.rect.left)/2;
+							faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+						}
+
+
+						Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
+
+
+						// 以下はサポートされていなければnullが入ってくる
+						if (face.mouth != null) {
+							Log.d(TAG, "face mouth: " + face.mouth.x + "," + face.mouth.y);
+							Log.d(TAG, "face leftEye: " + face.leftEye.x + "," + face.leftEye.y);
+							Log.d(TAG, "face rightEye: " + face.rightEye.x + "," + face.rightEye.y);
+						}
 					}
 				}
 			}
@@ -108,24 +112,24 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 
 	}
 
-	
+
 	public int getCenterPointX(){
 		return faceCenterPointX;
 	}
-	
+
 	public int getCenterPointY(){
 		return faceCenterPointY;
 	}
-	
+
 	public int faceCount(){
 		return faceCount;
 	}
-	
+
 	public int faceConfidence(){
 		return faceConfidence;
 	}
-	
-	
+
+
 	//プレビューサイズの設定
 	public Size setPreviewSize(int width, int height) {
 		Camera.Parameters parameters = _camera.getParameters();

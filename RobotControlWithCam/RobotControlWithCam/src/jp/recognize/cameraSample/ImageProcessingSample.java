@@ -8,17 +8,22 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Paint;
 import android.hardware.Camera.Face;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.overdriverobotics.smartbotsdk.SmartBot;
@@ -32,6 +37,11 @@ public class ImageProcessingSample extends Activity{
 	ColorConvert mColorConvert=new ColorConvert();	//色変換用クラス
 	ColorConvert.YUVtoRGB mYUV2RGB;
 	int count=0;
+	String RIGHT = "1";
+	String LEFT = "2";
+	String FRONT = "3";
+	String BACK = "4";
+	String STOP = "5";
 	
 	CameraCallback mCameraCallback=null;
 	
@@ -65,19 +75,47 @@ public class ImageProcessingSample extends Activity{
 		manager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		// Find the first available driver.
 		driver = UsbSerialProber.acquire(manager);
-		
 		//カメラ映像の表示
 		mCameraCallback=new CameraCallback(this);
+		trashControl();
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
-
 	}
 
 	int mZoom=0;
-        
 	
-	
+	public void trashControl(){
+		//Android画面サイズ取得
+		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+		// ディスプレイのインスタンス生成
+		Display disp = wm.getDefaultDisplay();
+		Point size = new Point();
+		disp.getSize(size);
+		//中心のx座標
+		int middleX = size.x;
+		//中心のy座標
+		int middleY = size.y;
+		int diffX = 20;
+		int diffY = 20;
+		while(diffX > 10 || diffY > 10){
+			int cenwidth = mCameraCallback.getCenterPointX();
+			int cenheight = mCameraCallback.getCenterPointY();
+			//x座標の差の絶対値
+			diffX = Math.abs(middleX - cenwidth);
+			//y座標の差の絶対値
+			diffY = Math.abs(middleY - cenheight);
+			//横方向に移動
+			if(diffX > 10){
+				moveTrashMotor(LEFT,1000);
+			}
+			//縦方向に移動
+			if(diffY > 10){
+				moveTrashMotor(FRONT,1000);
+			}
+			Log.d("centerDiff!!", String.valueOf(diffX));
+		}
+	}
 	
 	//独自プレビュー画面
 	/*private class GraphicsView extends View{
@@ -89,7 +127,7 @@ public class ImageProcessingSample extends Activity{
 		@Override
 		protected void onDraw(Canvas canvas){
 			if(mIntImage==null)return;
-			//canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
+			canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
 			
 			if(mZoom==1){
 				canvas.scale(mScaleWidth, mScaleHeight);//画面にあわせて拡大
@@ -120,11 +158,6 @@ public class ImageProcessingSample extends Activity{
 			paint.setStyle(Paint.Style.FILL);
 		}
 
-<<<<<<< HEAD
-	}
-		
-	
-=======
 	}*/
 
 	
@@ -148,9 +181,21 @@ public class ImageProcessingSample extends Activity{
 			  }
 		}
 	}
+	
+	//左に動かす
+	public void moveTrashMotor(String num, long time) {
+		sendCommand(num);
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sendCommand(STOP);
+	}
 	boolean mLightFlag=false;
 	//画面にタッチされた際の処理
-	public boolean onTouchEvent(MotionEvent event) {
+	/*public boolean onTouchEvent(MotionEvent event) {
 	    switch (event.getAction()) {
 	    case MotionEvent.ACTION_DOWN:
 	        break;
@@ -179,7 +224,7 @@ public class ImageProcessingSample extends Activity{
 	        break;
 	    }
 	    return super.onTouchEvent(event);
-	}
+	}*/
 	
 	int mScreenWidth=0;
 	int mScreenHeight=0;
@@ -215,3 +260,11 @@ public class ImageProcessingSample extends Activity{
 	}
 
 }
+
+        
+
+
+	
+
+
+
