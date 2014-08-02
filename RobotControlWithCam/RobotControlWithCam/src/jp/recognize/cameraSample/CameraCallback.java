@@ -30,8 +30,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	String FRONT = "3";
 	String BACK = "4";
 	String STOP = "5";
-	ImageProcessingSample imageSample=null;
-	Context context;
+	ImageProcessingSample imageSample;
 	int middleX,middleY;
 	
 
@@ -45,6 +44,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		middleX = cenwidth;
 		middleY = cenheight;
+		imageSample = c;
 		this.setFocusable(true);
 		this.requestFocus();
 	}
@@ -75,6 +75,10 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 				Log.d(TAG, "faces count: " + faces.length);
 				faceCount = faces.length;
 				int i = 0;
+				if(faceCount == 0){
+					faceCenterPointX =0;
+					faceCenterPointY =0;	
+				}
 				for (Face face : faces) {
 					i++;
 
@@ -146,12 +150,12 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		Log.d("beforeDiff", String.valueOf(diffX));
 		//横方向に移動
 		if(diffX > 10){
-			//imageSample.moveTrashMotor(LEFT,1000);
+			imageSample.moveTrashMotor(LEFT,1000);
 			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 		//縦方向に移動
 		if(diffY > 10){
-			//imageSample.moveTrashMotor(FRONT,1000);
+			imageSample.moveTrashMotor(FRONT,1000);
 			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 	}

@@ -91,6 +91,7 @@ public class ImageProcessingSample extends Activity{
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
+		//moveTrashMotor(FRONT,1000);
 	}
 
 	int mZoom=0;
