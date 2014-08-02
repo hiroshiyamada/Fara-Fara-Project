@@ -49,6 +49,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		middleX = cenwidth;
 		middleY = cenheight;
+		imageSample = c;
 		this.setFocusable(true);
 		this.requestFocus();
 	}
@@ -63,8 +64,6 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	}
 	public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){
 		
-		
-		
 		//paramsize
 		Size previewSize=setPreviewSize(720,480);
 		//Size previewSize=setPreviewSize(523,480);
@@ -74,7 +73,9 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		catch (IOException e) {}
 		_camera.startPreview();
 		startPreviewCallback();
-
+	
+		faceCenterPointX = 532;
+		faceCenterPointY = 320;	
 		
 		// 顔検出用のリスナーを登録する
 		_camera.setFaceDetectionListener(new FaceDetectionListener() {
@@ -88,7 +89,6 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 				
 				for (Face face : faces) {
 					i++;
-
 					// サポートされていなければ-1が常に返ってくる
 					Log.d(TAG, "face id: " + face.id);
 
@@ -99,14 +99,13 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					Log.d(TAG, "face rect: " + face.rect.left + "," + face.rect.top + " - "
 							+ face.rect.right + "," + face.rect.bottom);
 
-
 					if(i == 1){
 						faceCenterPointX = (face.rect.right + face.rect.left)/2;
 						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
 					}
 
 					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
-					//trashControl(faceCenterPointX,faceCenterPointY);
+					trashControl(faceCenterPointX,faceCenterPointY);
 
 					// 以下はサポートされていなければnullが入ってくる
 					if (face.mouth != null) {
@@ -156,15 +155,18 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		Log.d("beforeDiff", String.valueOf(diffX));
 		//横方向に移動
 		if(diffX > 10){
-		//	imageSample.moveTrashMotor(LEFT,1000);
+			imageSample.moveTrashMotor(LEFT,1000);
 			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 		//縦方向に移動
 		if(diffY > 10){
-			//imageSample.moveTrashMotor(FRONT,1000);
+			imageSample.moveTrashMotor(FRONT,1000);
 			Log.d("centerDiff!!", String.valueOf(diffX));
 		}
 	}
+	
+	
+	
 
 	//プレビューサイズの設定
 	public Size setPreviewSize(int width, int height) {
