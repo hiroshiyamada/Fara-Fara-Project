@@ -42,19 +42,30 @@ public class ImageProcessingSample extends Activity{
 	String FRONT = "3";
 	String BACK = "4";
 	String STOP = "5";
-	
+
 	CameraCallback mCameraCallback=null;
-	
+
 	SmartBot mySmartBot;
-	
+
 	UsbManager manager;
 	UsbSerialDriver driver;
-	
+
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		//Android画面サイズ取得
+		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+		// ディスプレイのインスタンス生成
+		Display disp = wm.getDefaultDisplay();
+		Point size = new Point();
+		disp.getSize(size);
+		//中心のx座標
+		int middleX = size.x;
+		//中心のy座標
+		int middleY = size.y;
 		//setContentView(R.layout.main);//元々の表示画面をコメントアウト
 		//画面の向きを横で固定
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -69,28 +80,23 @@ public class ImageProcessingSample extends Activity{
 				ViewGroup.LayoutParams.FILL_PARENT,
 				ViewGroup.LayoutParams.FILL_PARENT);
 
-		 mySmartBot = new SmartBot();
+		mySmartBot = new SmartBot();
 		// https://github.com/mik3y/usb-serial-for-android
 		// Get UsbManager from Android.
 		manager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		// Find the first available driver.
 		driver = UsbSerialProber.acquire(manager);
 		//カメラ映像の表示
-		
-		
-		
-		mCameraCallback=new CameraCallback(this);
-		
-		trashControl();
-		
+		mCameraCallback=new CameraCallback(this,middleX,middleY);
+
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
 	}
 
 	int mZoom=0;
-	
-	public void trashControl(){
+
+	/*	public void trashControl(){
 		//Android画面サイズ取得
 		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
 		// ディスプレイのインスタンス生成
@@ -126,7 +132,9 @@ public class ImageProcessingSample extends Activity{
 			}
 		}
 	}
-	
+	 */
+
+
 	//独自プレビュー画面
 	/*private class GraphicsView extends View{
 		Paint paint;
@@ -138,7 +146,7 @@ public class ImageProcessingSample extends Activity{
 		protected void onDraw(Canvas canvas){
 			if(mIntImage==null)return;
 			canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
-			
+
 			if(mZoom==1){
 				canvas.scale(mScaleWidth, mScaleHeight);//画面にあわせて拡大
 				if(mRecogBitmap!=null)canvas.drawBitmap(mRecogBitmap,0, 0, paint);
@@ -162,36 +170,36 @@ public class ImageProcessingSample extends Activity{
 				canvas.drawRect(mScreenWidth-mScreenWidth/4, 0, mScreenWidth, mScreenHeight, paint);
 				canvas.drawRect(0, mScreenHeight/2, mScreenWidth, mScreenHeight, paint);
 			}
-			
-			
+
+
 			paint.setColor(Color.RED);
 			paint.setStyle(Paint.Style.FILL);
 		}
 
 	}*/
 
-	
+
 	public void sendCommand(String stCommand){
 		if (driver != null) {
-			  try {
+			try {
 				driver.open();
-			
-			    driver.setBaudRate(9600);
-			    /*
+
+				driver.setBaudRate(9600);
+				/*
 			    byte buffer[] = new byte[16];
 			    int numBytesRead = driver.read(buffer, 1000);
-			    */
-			    
+				 */
+
 				driver.write(stCommand.getBytes(), stCommand.length());
-				
-			  } catch (Exception e) {
-			    // Deal with error.
-			  } finally {
-			   
-			  }
+
+			} catch (Exception e) {
+				// Deal with error.
+			} finally {
+
+			}
 		}
 	}
-	
+
 	//左に動かす
 	public void moveTrashMotor(String num, long time) {
 		sendCommand(num);
@@ -217,16 +225,16 @@ public class ImageProcessingSample extends Activity{
 	    	else if(mScreenWidth-mScreenWidth/4 < x && y>= mScreenHeight/2)mySmartBot.GoRightAngle(30);
 	    	else if(x<mScreenWidth/4 && y< mScreenHeight/2){mLightFlag=!mLightFlag;mySmartBot.Frontlight(mLightFlag);}
 	    	else if(mScreenWidth-mScreenWidth/4 < x && y< mScreenHeight/2)mySmartBot.Stop();
-	    	
+
 	    	if(mScreenWidth/4 < x && x< mScreenWidth-mScreenWidth/4 && y>= mScreenHeight/2){sendCommand("3");count=5;}//Front
 	    	else if(x<mScreenWidth/4 && y>= mScreenHeight/2){sendCommand("2");count=3;}//left
 	    	else if(mScreenWidth-mScreenWidth/4 < x && y>= mScreenHeight/2){sendCommand("1");count=3;}//right
 	    	else if(x<mScreenWidth/4 && y< mScreenHeight/2){sendCommand("4");count=5;}//back
 	    	else if(mScreenWidth-mScreenWidth/4 < x && y< mScreenHeight/2)sendCommand("5");//stop
-	    	
+
 	    	if(mScreenWidth/4 < x && x< mScreenWidth-mScreenWidth/4 &&y< mScreenHeight/2)mZoom=(mZoom+1)%2;
 	    	//mCameraCallback.autoFocus();
-	    	
+
 	        break;
 	    case MotionEvent.ACTION_MOVE:
 	        break;
@@ -235,7 +243,7 @@ public class ImageProcessingSample extends Activity{
 	    }
 	    return super.onTouchEvent(event);
 	}*/
-	
+
 	int mScreenWidth=0;
 	int mScreenHeight=0;
 	//初期化用
@@ -249,7 +257,7 @@ public class ImageProcessingSample extends Activity{
 		mScaleHeight=(float)screen_height/mPreviewHeight;
 		mIntImage=new int[mPreviewWidth*mPreviewHeight];
 		mYUV2RGB = mColorConvert.newYUVtoRGB(mPreviewWidth, mPreviewHeight, 2,3,3);
-		
+
 
 	}
 
@@ -264,17 +272,17 @@ public class ImageProcessingSample extends Activity{
 		mRecogBitmap.setPixels(mIntImage,0, mPreviewWidth,
 				0, 0, mRecogBitmap.getWidth(), mRecogBitmap.getHeight());
 
-		
+
 		count--;
 		if(count==0)sendCommand("5");//stop
 	}
 
 }
 
-        
 
 
-	
+
+
 
 
 
