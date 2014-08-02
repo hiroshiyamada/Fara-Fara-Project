@@ -74,9 +74,13 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					// 検出された顔の範囲
 					Log.d(TAG, "face rect: " + face.rect.left + "," + face.rect.top + " - "
 							+ face.rect.right + "," + face.rect.bottom);
-					if(i == 1){
-						faceCenterPointX = face.rect.right - face.rect.left;
-						faceCenterPointY = face.rect.bottom - face.rect.top;
+					
+					
+					if(i == 1){	
+						faceCenterPointX = (face.rect.right + face.rect.left)/2;
+						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+						tmpX = 0;
+						
 					}
 					
 					
