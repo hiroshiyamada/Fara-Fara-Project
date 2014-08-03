@@ -161,6 +161,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
        // int h = 640;
         //Rect rect = new Rect();
 
+    	
     	int[] point = new int[2];
     	
     	point[0]=(int)(((float)middleX/1000.0) * X) + middleX;        
