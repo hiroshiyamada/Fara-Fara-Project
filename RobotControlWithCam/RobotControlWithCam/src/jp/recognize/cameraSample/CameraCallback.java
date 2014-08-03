@@ -236,19 +236,19 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		
 		//y座標の差の絶対値
 		int diffY = Math.abs(middleY - cenheight);
-		Log.d(TAG,"beforeDiff" +String.valueOf(diffX));
+		Log.i(TAG,"beforeDiff" +String.valueOf(diffX));
 		//横方向に移動
 		if(diffX > 0){
 			imageSample.moveTrashMotor(LEFT,ROTATION_PERIOD);
-			Log.d(TAG,"centerDiffX!!"+String.valueOf(diffX));
+			Log.i(TAG,"leftDiffX!!"+String.valueOf(diffX));
 		}else if(diffX <= 0){
 			imageSample.moveTrashMotor(RIGHT,ROTATION_PERIOD);
-			Log.d(TAG,"centerDiffX!!"+String.valueOf(diffX));
+			Log.i(TAG,"rightDiffX!!"+String.valueOf(diffX));
 		}
 		//縦方向に移動
 		if(diffY > 1){
 			imageSample.moveTrashMotor(FRONT,STRAIGHT_PERIOD);
-			Log.d(TAG,"centerDiffY!!"+String.valueOf(diffY));
+			Log.i(TAG,"frontDiffY!!"+String.valueOf(diffY));
 		}
 	}
 	
