@@ -57,7 +57,6 @@ public class BluetoothDetecter extends Activity{
 		// 周辺デバイスの検索開始
 		mBtAdapter.startDiscovery();	
 		//一回のみ
-		
 	}
 
 	@Override

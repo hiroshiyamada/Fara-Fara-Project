@@ -288,6 +288,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		return _camera.getParameters().getPreviewSize();
 	}
 	byte[] mImgaeData=null;
+	
 	public void onPreviewFrame(byte[] data, Camera camera) {
 
 		stopPreviewCallback();
