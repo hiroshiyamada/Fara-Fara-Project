@@ -46,7 +46,9 @@ public class ImageProcessingSample extends Activity{
 	String FRONT = "3";
 	String BACK = "4";
 	String STOP = "5";
-	private final static int TIMER_PERIOD = 10;
+	//private final static int TIMER_PERIOD = 100;
+	private final static int ROTATION_PERIOD = 500;
+	private final static int STRAIGHT_PERIOD = 5000;
 	private Handler handler = new Handler();
 	private int timeCount=0;
 	CameraCallback mCameraCallback=null;
@@ -55,6 +57,8 @@ public class ImageProcessingSample extends Activity{
 
 	UsbManager manager;
 	UsbSerialDriver driver;
+
+	public GraphicsView gView;
 
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
@@ -95,15 +99,27 @@ public class ImageProcessingSample extends Activity{
 		//カメラ映像の表示
 		mCameraCallback=new CameraCallback(this,middleX,middleY);
 
+
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
-		addContentView(new View(this), layoutParams);
-	}
-	//moveTrashMotor(FRONT,1000);
+		gView = new GraphicsView(this);
+		addContentView(gView, layoutParams);
+		/*Timer timer = new Timer(false);
+		//set the timer schedule
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
 
-	//
+					}
+				});
+			}
+		}, 100, TIMER_PERIOD);*/
+	}
 	int mZoom=0;
-/*
+
 	public void trashControl(){
 		//Android画面サイズ取得
 		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
@@ -121,29 +137,35 @@ public class ImageProcessingSample extends Activity{
 
 		while(diffX > 10 || diffY > 10){
 
-			int cenwidth = mCameraCallback.getCenterPointX();
-			int cenheight = mCameraCallback.getCenterPointY();
+			//顔中心のx座標
+			int cenwidth = mCameraCallback.getFaceCenterPointX();
+			//顔中心のy座標
+			int cenheight = mCameraCallback.getFaceCenterPointY();
 
 			//x座標の差の絶対値
-			diffX = Math.abs(middleX - cenwidth);
+			diffX = middleX - cenwidth;
 			//y座標の差の絶対値
 			diffY = Math.abs(middleY - cenheight);
 			//横方向に移動
-			if(diffX > 10){
-				moveTrashMotor(LEFT,1000);
+			if(diffX > 0){
+				moveTrashMotor(LEFT,ROTATION_PERIOD);
+			}else{
+				moveTrashMotor(LEFT,ROTATION_PERIOD);
 			}
 			//縦方向に移動
 			if(diffY > 10){
-				moveTrashMotor(FRONT,1000);
+				moveTrashMotor(FRONT,STRAIGHT_PERIOD);
 			}
 		}
 	}
 
-*/
 
+	public void textUpdate(){
+		gView.invalidate();
+	}
 
 	//独自プレビュー画面
-	/*private class GraphicsView extends View{
+	private class GraphicsView extends View{
 		Paint paint;
 		public GraphicsView(Context c){
 			super(c);
@@ -151,8 +173,27 @@ public class ImageProcessingSample extends Activity{
 		}
 		@Override
 		protected void onDraw(Canvas canvas){
-			if(mIntImage==null)return;
-			canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
+			//if(mIntImage==null)return;
+			//canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
+			//Android画面サイズ取得
+			WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+			// ディスプレイのインスタンス生成
+			Display disp = wm.getDefaultDisplay();
+			Point size = new Point();
+			disp.getSize(size);
+			//中心のx座標
+			int middleX = size.x;
+			//中心のy座標
+			int middleY = size.y;
+
+
+			paint.setTextSize(40);
+			paint.setColor(Color.RED);
+			canvas.drawText("画面の中心:"+middleX+":"+middleY,70,100,paint);
+			canvas.drawText("検出した顔の中心:"+mCameraCallback.getFaceCenterPointX()+":"+mCameraCallback.getFaceCenterPointY(),70,200,paint);
+		}
+	}
+	/*
 
 			if(mZoom==1){
 				canvas.scale(mScaleWidth, mScaleHeight);//画面にあわせて拡大
