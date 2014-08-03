@@ -265,13 +265,9 @@ public class ImageProcessingSample extends Activity{
 		mScaleHeight=(float)screen_height/mPreviewHeight;
 		mIntImage=new int[mPreviewWidth*mPreviewHeight];
 		mYUV2RGB = mColorConvert.newYUVtoRGB(mPreviewWidth, mPreviewHeight, 2,3,3);
-
-
 	}
 
-	Bitmap mRecogBitmap=null;
-
-
+	//Bitmap mRecogBitmap=null;
 	//画像処理
 	/*
 	public void recognition(byte yuv[]) {
@@ -288,11 +284,3 @@ public class ImageProcessingSample extends Activity{
 	 */
 
 }
-
-
-
-
-
-
-
-
