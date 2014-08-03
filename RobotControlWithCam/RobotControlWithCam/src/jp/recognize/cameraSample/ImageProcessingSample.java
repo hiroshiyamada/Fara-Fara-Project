@@ -48,12 +48,17 @@ public class ImageProcessingSample extends Activity{
 	String STOP = "5";
 	//private final static int TIMER_PERIOD = 100;
 	private final static int ROTATION_PERIOD = 1;
+	private final static int START_PERIOD = 4;
 	private final static int STRAIGHT_PERIOD = 1000;
 	private Handler handler = new Handler();
 	private int timeCount=0;
 	CameraCallback mCameraCallback=null;
 	int middleX;
 	int middleY;
+	int flag = 0;
+	int startCount = 0;
+	int faceCount = 0;
+	int tempCount = 0;
 
 	SmartBot mySmartBot;
 
@@ -136,17 +141,38 @@ public class ImageProcessingSample extends Activity{
 		//int diffY = Math.abs(middleY - cenheight);
 		//横方向に移動
 		
+		Log.d("test", "testFlag,"+flag);
+		
+		
 		Log.d("test", "testDiff,"+diffX+","+cenheight);
 		
-		
-		if(diffX > 50){
-			moveTrashMotor(LEFT,ROTATION_PERIOD);
-		}else if(diffX < -50){
-			moveTrashMotor(RIGHT,ROTATION_PERIOD);
+		if(flag == 0){
+			faceCount = mCameraCallback.faceCount();
+			if(tempCount < faceCount){
+				tempCount = faceCount;
+			}
+			moveTrashMotor(LEFT,START_PERIOD);
+			startCount++;
+			if(startCount > 500){
+				flag = 1;
+				Log.d("test", "testCount,"+tempCount);
+			}
+		}else if(flag == 1 && mCameraCallback.faceCount() == tempCount){
+			flag = 2;
+		}else if(flag == 1){
+			moveTrashMotor(LEFT,START_PERIOD);
 		}
-		//縦方向に移動
-		else if(cenheight > 50){
-			moveTrashMotor(FRONT,STRAIGHT_PERIOD);
+		
+		if(flag == 2){
+			if(diffX > 50){
+				moveTrashMotor(LEFT,ROTATION_PERIOD);
+			}else if(diffX < -50){
+				moveTrashMotor(RIGHT,ROTATION_PERIOD);
+			}
+			//縦方向に移動
+			else if(cenheight > 50){
+				moveTrashMotor(FRONT,STRAIGHT_PERIOD);
+			}
 		}
 	}
 

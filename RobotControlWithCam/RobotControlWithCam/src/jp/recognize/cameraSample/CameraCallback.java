@@ -93,11 +93,25 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 			@Override
 			public void onFaceDetection(Face[] faces, Camera camera) {
 				int i = 0;
+				int flag = 0;
 				Log.d(TAG, "faces count: " + faces.length);
 				faceCount = faces.length;
+				if(flag == 0) {
+					
+				}
 				if(faces.length == 0){
 					faceX = middleX;
 					faceY = 0;
+					
+					//ここ
+					
+					
+					
+					
+					
+					
+					
+					
 				}else{				
 					for (Face face : faces) {
 						i++;
