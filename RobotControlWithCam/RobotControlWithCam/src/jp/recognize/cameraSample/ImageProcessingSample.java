@@ -89,10 +89,12 @@ public class ImageProcessingSample extends Activity{
 		//カメラ映像の表示
 		mCameraCallback=new CameraCallback(this,middleX,middleY);
 
+		
+		
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
-		//moveTrashMotor(FRONT,1000);
+		//moveTrashMotor(LEFT,3500);
 	}
 
 	int mZoom=0;
@@ -205,7 +207,7 @@ public class ImageProcessingSample extends Activity{
 	public void moveTrashMotor(String num, long time) {
 		sendCommand(num);
 		Log.d("test","moter");
-		//try {
+//		try {
 //			Thread.sleep(time);
 //			
 //		} catch (InterruptedException e) {
@@ -214,6 +216,8 @@ public class ImageProcessingSample extends Activity{
 //		}
 		sendCommand(STOP);
 	}
+	
+	
 	boolean mLightFlag=false;
 	//画面にタッチされた際の処理
 	/*public boolean onTouchEvent(MotionEvent event) {

@@ -6,7 +6,10 @@
 
     <uses-permission android:name="android.permission.CAMERA" >
     </uses-permission>
-
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+　　<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    
+    
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -27,7 +30,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+             </intent-filter>
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
@@ -36,6 +39,18 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
+        
+        <activity 
+            android:name="jp.recognize.cameraSample.BluetoothDetecter"
+            android:label="test">
+<!--             <intent-filter>　
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+            </intent-filter>
+ -->            
+        </activity>
+        
     </application>
 
 </manifest>
