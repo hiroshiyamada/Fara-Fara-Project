@@ -73,7 +73,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){
 		
 		//paramsize
-		Size previewSize=setPreviewSize(720,480);
+		Size previewSize=setPreviewSize(middleX*2,middleY*2);
 		//Size previewSize=setPreviewSize(523,480);
 				
 		mClass.initImageData(previewSize.width, previewSize.height, width, height);
@@ -82,8 +82,8 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		_camera.startPreview();
 		startPreviewCallback();
 	
-		faceCenterPointX = 532;
-		faceCenterPointY = 320;	
+		faceCenterPointX = middleX;
+		faceCenterPointY = middleY;	
 		
 		// 顔検出用のリスナーを登録する
 		_camera.setFaceDetectionListener(new FaceDetectionListener() {
@@ -105,13 +105,13 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					Log.d(TAG, "face rect: " + face.rect.left + "," + face.rect.top + " - "
 							+ face.rect.right + "," + face.rect.bottom);
 
-					Rect rect = faceRect2PixelRect(face);
-					
 					if(i == 1){
-//						faceCenterPointX = (face.rect.right + face.rect.left)/2;
-//						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
-						faceCenterPointX = (rect.right + rect.left)/2;
-						faceCenterPointY = (rect.bottom + rect.top)/2;
+						faceCenterPointX = (face.rect.right + face.rect.left)/2;
+						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+						//faceCenterPointX = (rect.right + rect.left)/2;
+						//faceCenterPointY = (rect.bottom + rect.top)/2;
+						faceRect2PixelRect(faceCenterPointX, faceCenterPointY);
+						
 						_camera.stopFaceDetection();
 						trashControl(faceCenterPointX,faceCenterPointY);
 						break;
@@ -150,18 +150,25 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
      * @param face 顔認識情報
      * @return 描画用矩形範囲
      */
-    private Rect faceRect2PixelRect(Face face) {
-        int w = 1064;
-        int h = 640;
-        Rect rect = new Rect();
+    private void faceRect2PixelRect(int X, int Y) {
+       // int w = 1064;
+       // int h = 640;
+        //Rect rect = new Rect();
 
+    	faceCenterPointX = (middleX/1000) * X + middleX;        
+    	faceCenterPointY = (middleY/1000) * X + middleY;
+        
+    	Log.d(TAG, "testCameraPreviewPoint,"+faceCenterPointX+","+faceCenterPointY);
+
+    	
         // フロントカメラなので左右反転、portraitなので座標軸反転
-        rect.left = w * (-face.rect.top + 1000) / 2000;
+      /*  rect.left = w * (-face.rect.top + 1000) / 2000;
         rect.right = w * (-face.rect.bottom + 1000) / 2000;
         rect.top = h * (-face.rect.right + 1000) / 2000;
         rect.bottom = h * (-face.rect.left + 1000) / 2000;
         //Log.d(TAG, "rect=" + face.rect + "=>" + rect);
         return rect;
+        */
     }
 
 	
@@ -211,7 +218,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		timer.cancel();
 	}*/
 	public void trashControl(int cenwidth, int cenheight){		
-		Log.d(TAG, "testttttttttttttttttttttt,"+middleX+"vs"+cenwidth+","+middleY+"vs"+cenheight);
+		Log.d(TAG, "testViewPoint,"+middleX+"vs"+cenwidth+","+middleY+"vs"+cenheight);
 
 		//x座標の差の絶対値
 		int diffX = Math.abs(middleX - cenwidth);
@@ -227,7 +234,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		//縦方向に移動
 		if(diffY > 10){
 			imageSample.moveTrashMotor(FRONT,MOTOR_PERIOD);
-			Log.d(TAG,"centerDiff!!"+String.valueOf(diffX));
+			Log.d(TAG,"centerDiff!!"+String.valueOf(diffY));
 		}
 	}
 	
@@ -275,6 +282,4 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 			}
 		});
 	}
-
 }
->>>>>>> cfdd8c2700e56233ab8685e271f430bdb97760f5
