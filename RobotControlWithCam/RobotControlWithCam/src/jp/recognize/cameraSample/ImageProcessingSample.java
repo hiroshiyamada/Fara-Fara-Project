@@ -102,7 +102,7 @@ public class ImageProcessingSample extends Activity{
 	//moveTrashMotor(FRONT,1000);
 
 	int mZoom=0;
-
+/*
 	public void trashControl(){
 		//Android画面サイズ取得
 		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
@@ -138,7 +138,7 @@ public class ImageProcessingSample extends Activity{
 		}
 	}
 
-
+*/
 
 
 	//独自プレビュー画面

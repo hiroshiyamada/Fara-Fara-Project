@@ -106,14 +106,20 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 							+ face.rect.right + "," + face.rect.bottom);
 
 					if(i == 1){
+				
 						faceCenterPointX = (face.rect.right + face.rect.left)/2;
 						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
 						//faceCenterPointX = (rect.right + rect.left)/2;
 						//faceCenterPointY = (rect.bottom + rect.top)/2;
-						faceRect2PixelRect(faceCenterPointX, faceCenterPointY);
+						
+						Log.d(TAG, "testCameraPreviewPoint,"+faceCenterPointX+","+faceCenterPointY);
+						int point[];
+						point = faceRect2PixelRect(faceCenterPointX, faceCenterPointY);
+						
+						Log.d(TAG, "test" + point[0]+ "," + point[1]);
 						
 						_camera.stopFaceDetection();
-						trashControl(faceCenterPointX,faceCenterPointY);
+						trashControl(point[0],point[1]);
 						break;
 					}
 
@@ -150,15 +156,18 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
      * @param face 顔認識情報
      * @return 描画用矩形範囲
      */
-    private void faceRect2PixelRect(int X, int Y) {
+    private int[] faceRect2PixelRect(int X, int Y) {
        // int w = 1064;
        // int h = 640;
         //Rect rect = new Rect();
 
-    	faceCenterPointX = (middleX/1000) * X + middleX;        
-    	faceCenterPointY = (middleY/1000) * X + middleY;
+    	int[] point = new int[2];
+    	
+    	point[0]=(int)(((float)middleX/1000.0) * X) + middleX;        
+    	point[1] =(int)(((float)middleY/1000) * X) + middleY;
         
-    	Log.d(TAG, "testCameraPreviewPoint,"+faceCenterPointX+","+faceCenterPointY);
+    	Log.d(TAG, "testCameraPreviewPoint,"+point[0]+","+point[1]);
+		return point;
 
     	
         // フロントカメラなので左右反転、portraitなので座標軸反転
@@ -229,12 +238,12 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		//横方向に移動
 		if(diffX > 10){
 			imageSample.moveTrashMotor(LEFT,MOTOR_PERIOD);
-			Log.d(TAG,"centerDiff!!"+String.valueOf(diffX));
+			Log.d(TAG,"centerDiffX!!"+String.valueOf(diffX));
 		}
 		//縦方向に移動
 		if(diffY > 10){
 			imageSample.moveTrashMotor(FRONT,MOTOR_PERIOD);
-			Log.d(TAG,"centerDiff!!"+String.valueOf(diffY));
+			Log.d(TAG,"centerDiffY!!"+String.valueOf(diffY));
 		}
 	}
 	
