@@ -227,7 +227,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		//縦方向に移動
 		if(diffY > 10){
 			imageSample.moveTrashMotor(FRONT,MOTOR_PERIOD);
-			Log.d(TAG,"centerDiff!!"+String.valueOf(diffX));
+			Log.d(TAG,"yDiff!!"+String.valueOf(diffY));
 		}
 	}
 	
