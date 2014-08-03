@@ -101,6 +101,7 @@ public class ImageProcessingSample extends Activity{
 	}
 	//moveTrashMotor(FRONT,1000);
 
+	//
 	int mZoom=0;
 /*
 	public void trashControl(){
