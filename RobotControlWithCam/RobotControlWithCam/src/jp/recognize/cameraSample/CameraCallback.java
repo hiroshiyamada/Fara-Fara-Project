@@ -2,6 +2,8 @@ package jp.recognize.cameraSample;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -10,6 +12,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Face;
 import android.hardware.Camera.FaceDetectionListener;
 import android.hardware.Camera.Size;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -35,6 +38,9 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	String FRONT = "3";
 	String BACK = "4";
 	String STOP = "5";
+	private final static int TIMER_PERIOD = 50;
+	private final static int MOTOR_PERIOD = 10;
+	private Handler handler = new Handler();
 	ImageProcessingSample imageSample= new ImageProcessingSample();
 	Context context;
 	int middleX,middleY;
@@ -82,13 +88,36 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		_camera.setFaceDetectionListener(new FaceDetectionListener() {
 			// 顔が検出された時の処理を記述する
 			@Override
-			public void onFaceDetection(Face[] faces, Camera camera) {
+			public void onFaceDetection(final Face[] faces, Camera camera) {
 				
 				Log.d(TAG, "faces count: " + faces.length);
 				faceCount = faces.length;
-				int i = 0;
-				
-				for (Face face : faces) {
+				//make the timer
+				Timer timer = new Timer(false);
+				//set the timer schedule
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								int i = 0;
+								for (Face face : faces) {
+									i++;
+									Rect rect = faceRect2PixelRect(face);
+									if(i == 1){
+//										faceCenterPointX = (face.rect.right + face.rect.left)/2;
+//										faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+										faceCenterPointX = (rect.right + rect.left)/2;
+										faceCenterPointY = (rect.bottom + rect.top)/2;
+									}
+									trashControl(faceCenterPointX,faceCenterPointY);
+								}
+							}
+						});
+					}
+				}, 100, TIMER_PERIOD);
+				/*for (Face face : faces) {
 					i++;
 					// サポートされていなければ-1が常に返ってくる
 					Log.d(TAG, "face id: " + face.id);
@@ -110,7 +139,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					}
 
 					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
-					trashControl(faceCenterPointX,faceCenterPointY);
+					//trashControl(faceCenterPointX,faceCenterPointY);
 
 					// 以下はサポートされていなければnullが入ってくる
 					if (face.mouth != null) {
@@ -118,7 +147,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 						Log.d(TAG, "face leftEye: " + face.leftEye.x + "," + face.leftEye.y);
 						Log.d(TAG, "face rightEye: " + face.rightEye.x + "," + face.rightEye.y);
 					}
-				}
+				}*/
 			}
 		});
 
@@ -184,12 +213,12 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		Log.d(TAG,"beforeDiff" +String.valueOf(diffX));
 		//横方向に移動
 		if(diffX > 10){
-			imageSample.moveTrashMotor(LEFT,1000);
+			imageSample.moveTrashMotor(LEFT,MOTOR_PERIOD);
 			Log.d(TAG,"centerDiff!!"+String.valueOf(diffX));
 		}
 		//縦方向に移動
 		if(diffY > 10){
-			imageSample.moveTrashMotor(FRONT,1000);
+			imageSample.moveTrashMotor(FRONT,MOTOR_PERIOD);
 			Log.d(TAG,"centerDiff!!"+String.valueOf(diffX));
 		}
 	}

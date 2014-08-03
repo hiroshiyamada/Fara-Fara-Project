@@ -1,6 +1,9 @@
 package jp.recognize.cameraSample;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +18,7 @@ import android.graphics.Paint;
 import android.hardware.Camera.Face;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -42,7 +46,9 @@ public class ImageProcessingSample extends Activity{
 	String FRONT = "3";
 	String BACK = "4";
 	String STOP = "5";
-
+	private final static int TIMER_PERIOD = 10;
+	private Handler handler = new Handler();
+	private int timeCount=0;
 	CameraCallback mCameraCallback=null;
 
 	SmartBot mySmartBot;
@@ -92,12 +98,12 @@ public class ImageProcessingSample extends Activity{
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
 		addContentView(new View(this), layoutParams);
-		//moveTrashMotor(FRONT,1000);
 	}
+	//moveTrashMotor(FRONT,1000);
 
 	int mZoom=0;
 
-	/*	public void trashControl(){
+	public void trashControl(){
 		//Android画面サイズ取得
 		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
 		// ディスプレイのインスタンス生成
@@ -110,16 +116,14 @@ public class ImageProcessingSample extends Activity{
 		int middleY = size.y;
 		int diffX = 20;
 		int diffY = 20;
-		
-		
+
+
 		while(diffX > 10 || diffY > 10){
-			
-			//int cenwidth = mCameraCallback.getCenterPointX();
-			//int cenheight = mCameraCallback.getCenterPointY();
-			int cenwidth = 0;
-			int cenheight = 0;
-			
-					//x座標の差の絶対値
+
+			int cenwidth = mCameraCallback.getCenterPointX();
+			int cenheight = mCameraCallback.getCenterPointY();
+
+			//x座標の差の絶対値
 			diffX = Math.abs(middleX - cenwidth);
 			//y座標の差の絶対値
 			diffY = Math.abs(middleY - cenheight);
@@ -133,7 +137,8 @@ public class ImageProcessingSample extends Activity{
 			}
 		}
 	}
-	 */
+
+
 
 
 	//独自プレビュー画面
@@ -206,12 +211,12 @@ public class ImageProcessingSample extends Activity{
 		sendCommand(num);
 		Log.d("test","moter");
 		//try {
-//			Thread.sleep(time);
-//			
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		//			Thread.sleep(time);
+		//			
+		//		} catch (InterruptedException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 		sendCommand(STOP);
 	}
 	boolean mLightFlag=false;
@@ -280,7 +285,7 @@ public class ImageProcessingSample extends Activity{
 		count--;
 		if(count==0)sendCommand("5");//stop
 	}
-	*/
+	 */
 
 }
 
