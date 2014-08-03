@@ -95,7 +95,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 				faceCount = faces.length;
 				for (Face face : faces) {
 					i++;
-					// サポートされていなければ-1が常に返ってくる
+					/// サポートされていなければ-1が常に返ってくる
 					Log.d(TAG, "face id: " + face.id);
 
 					// 顔検出の信頼度 1から100までの値が入っており、100が顔として信頼度が一番高い
