@@ -39,7 +39,8 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	String BACK = "4";
 	String STOP = "5";
 	private final static int TIMER_PERIOD = 50;
-	private final static int MOTOR_PERIOD = 2000;
+	private final static int ROTATION_PERIOD = 500;
+	private final static int STRAIGHT_PERIOD = 5000;
 	private Handler handler = new Handler();
 	ImageProcessingSample imageSample= new ImageProcessingSample();
 	SurfaceHolder sHolder;
@@ -231,19 +232,22 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		Log.d(TAG, "testViewPoint,"+middleX+"vs"+cenwidth+","+middleY+"vs"+cenheight);
 
 		//x座標の差の絶対値
-		int diffX = Math.abs(middleX - cenwidth);
+		int diffX = middleX - cenwidth;
 		
 		//y座標の差の絶対値
 		int diffY = Math.abs(middleY - cenheight);
 		Log.d(TAG,"beforeDiff" +String.valueOf(diffX));
 		//横方向に移動
-		if(diffX > 10){
-			imageSample.moveTrashMotor(LEFT,MOTOR_PERIOD);
+		if(diffX > 0){
+			imageSample.moveTrashMotor(LEFT,ROTATION_PERIOD);
+			Log.d(TAG,"centerDiffX!!"+String.valueOf(diffX));
+		}else if(diffX <= 0){
+			imageSample.moveTrashMotor(RIGHT,ROTATION_PERIOD);
 			Log.d(TAG,"centerDiffX!!"+String.valueOf(diffX));
 		}
 		//縦方向に移動
-		if(diffY > 10){
-			imageSample.moveTrashMotor(FRONT,MOTOR_PERIOD);
+		if(diffY > 1){
+			imageSample.moveTrashMotor(FRONT,STRAIGHT_PERIOD);
 			Log.d(TAG,"centerDiffY!!"+String.valueOf(diffY));
 		}
 	}
@@ -293,4 +297,3 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		});
 	}
 }
->>>>>>> f8274f637226c1b2ad585e33567cbc49a56531cd
