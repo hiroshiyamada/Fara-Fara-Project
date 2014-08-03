@@ -112,8 +112,8 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 //						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
 						faceCenterPointX = (rect.right + rect.left)/2;
 						faceCenterPointY = (rect.bottom + rect.top)/2;
-						trashControl(faceCenterPointX,faceCenterPointY);
 						_camera.stopFaceDetection();
+						trashControl(faceCenterPointX,faceCenterPointY);
 						break;
 					}
 
