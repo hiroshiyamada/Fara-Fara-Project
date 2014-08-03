@@ -294,6 +294,7 @@ public class ImageProcessingSample extends Activity{
 		mIntImage=new int[mPreviewWidth*mPreviewHeight];
 		mYUV2RGB = mColorConvert.newYUVtoRGB(mPreviewWidth, mPreviewHeight, 2,3,3);
 	}
+	//
 
 	//Bitmap mRecogBitmap=null;
 	//画像処理
