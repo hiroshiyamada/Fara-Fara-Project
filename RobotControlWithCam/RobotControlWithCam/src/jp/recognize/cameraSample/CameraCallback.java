@@ -123,11 +123,14 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 						faceX=point[0];
 						faceY=point[1];
 						
-						
 						//再描画
 						mClass.textUpdate();
 						
 						/*_camera.stopFaceDetection();
+						//止めてる
+						_camera.stopFaceDetection();
+						
+						
 						trashControl(point[0],point[1]);
 						break;*/
 					}
@@ -156,7 +159,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 
 	}
 
-
+//
     /**
      * 顔認識範囲を描画用に座標変換する。
      * - Face.rect の座標系はプレビュー画像に対し -1000～1000 の相対座標。
