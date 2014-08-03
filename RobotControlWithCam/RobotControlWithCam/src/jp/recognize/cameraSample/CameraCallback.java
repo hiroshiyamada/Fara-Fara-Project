@@ -173,18 +173,18 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	 * @param face 顔認識情報
 	 * @return 描画用矩形範囲
 	 */
-	private int[] faceRect2PixelRect(int X, int Y) {
-		// int w = 1064;
-		// int h = 640;
-		//Rect rect = new Rect();
+    private int[] faceRect2PixelRect(int X, int Y) {
+       // int w = 1064;
+       // int h = 640;
+        //Rect rect = new Rect();
 
-
-		int[] point = new int[2];
-
-		point[0]=(int)(((float)middleX/1000.0) * X) + middleX;        
-		point[1] =(int)(((float)middleY/1000.0) * Y) + middleY;
-
-		Log.d(TAG, "testCameraPreviewPoint,"+point[0]+","+point[1]);
+    	
+    	int[] point = new int[2];
+    	
+    	point[0]=(int)(((float)middleX/1000.0) * X) + middleX;        
+    	point[1] =(int)(((float)middleY/1000.0) * Y) + middleY;
+        
+    	Log.d(TAG, "testCameraPreviewPoint,"+point[0]+","+point[1]);
 		return point;
 
 
