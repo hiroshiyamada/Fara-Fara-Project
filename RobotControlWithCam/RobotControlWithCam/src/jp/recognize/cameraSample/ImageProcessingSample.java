@@ -210,13 +210,13 @@ public class ImageProcessingSample extends Activity{
 	public void moveTrashMotor(String num, long time) {
 		sendCommand(num);
 		Log.d("test","moter");
-		//try {
-		//			Thread.sleep(time);
-		//			
-		//		} catch (InterruptedException e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
+		try {
+			Thread.sleep(time);
+
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		sendCommand(STOP);
 	}
 	boolean mLightFlag=false;
