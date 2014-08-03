@@ -56,6 +56,8 @@ public class ImageProcessingSample extends Activity{
 	UsbManager manager;
 	UsbSerialDriver driver;
 
+	public GraphicsView gView;
+	
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
 	@Override
@@ -95,9 +97,12 @@ public class ImageProcessingSample extends Activity{
 		//カメラ映像の表示
 		mCameraCallback=new CameraCallback(this,middleX,middleY);
 
+		
 		setContentView(mCameraCallback, layoutParams);//CameraCallbackを描画画面に設定
 		//独自プレビュー描画画面
-		addContentView(new View(this), layoutParams);
+		gView = new GraphicsView(this);
+		addContentView(gView, layoutParams);
+		
 	}
 	//moveTrashMotor(FRONT,1000);
 
@@ -141,9 +146,12 @@ public class ImageProcessingSample extends Activity{
 
 */
 
+	public void textUpdate(){
+		gView.invalidate();
+	}
 
 	//独自プレビュー画面
-	/*private class GraphicsView extends View{
+	private class GraphicsView extends View{
 		Paint paint;
 		public GraphicsView(Context c){
 			super(c);
@@ -151,9 +159,28 @@ public class ImageProcessingSample extends Activity{
 		}
 		@Override
 		protected void onDraw(Canvas canvas){
-			if(mIntImage==null)return;
-			canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
-
+			//if(mIntImage==null)return;
+			//canvas.drawRGB(128, 128, 128);//SurfaceViewのカメラプレビューは使わないので塗りつぶしておく
+			//Android画面サイズ取得
+			WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+			// ディスプレイのインスタンス生成
+			Display disp = wm.getDefaultDisplay();
+			Point size = new Point();
+			disp.getSize(size);
+			//中心のx座標
+			int middleX = size.x;
+			//中心のy座標
+			int middleY = size.y;
+			
+			
+			paint.setTextSize(40);
+			paint.setColor(Color.RED);
+			canvas.drawText("画面の中心:"+middleX+":"+middleY,70,100,paint);
+			canvas.drawText("検出した顔の中心:"+mCameraCallback.getFaceCenterPointX()+":"+mCameraCallback.getFaceCenterPointY(),70,200,paint);
+			}
+	}
+			/*
+			
 			if(mZoom==1){
 				canvas.scale(mScaleWidth, mScaleHeight);//画面にあわせて拡大
 				if(mRecogBitmap!=null)canvas.drawBitmap(mRecogBitmap,0, 0, paint);
