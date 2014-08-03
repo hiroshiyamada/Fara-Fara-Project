@@ -39,9 +39,10 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	String BACK = "4";
 	String STOP = "5";
 	private final static int TIMER_PERIOD = 50;
-	private final static int MOTOR_PERIOD = 10;
+	private final static int MOTOR_PERIOD = 2000;
 	private Handler handler = new Handler();
 	ImageProcessingSample imageSample= new ImageProcessingSample();
+	SurfaceHolder sHolder;
 	Context context;
 	int middleX,middleY;
 
@@ -51,7 +52,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 	public CameraCallback(ImageProcessingSample c, int cenwidth, int cenheight) {		//描画画面の準備
 		super((Context)c);
 		mClass=c;
-		SurfaceHolder sHolder = getHolder();
+		sHolder = getHolder();
 		sHolder.addCallback(this);
 		sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		middleX = cenwidth;
@@ -88,6 +89,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		_camera.setFaceDetectionListener(new FaceDetectionListener() {
 			// 顔が検出された時の処理を記述する
 			@Override
+<<<<<<< HEAD
 			public void onFaceDetection(final Face[] faces, Camera camera) {
 
 				Log.d(TAG, "faces count: " + faces.length);
@@ -116,6 +118,13 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 					Log.d(TAG, "TEST1");
 				}
 				/*for (Face face : faces) {
+=======
+			public void onFaceDetection(Face[] faces, Camera camera) {
+				int i = 0;
+				Log.d(TAG, "faces count: " + faces.length);
+				faceCount = faces.length;
+				for (Face face : faces) {
+>>>>>>> d312862e111a107f745349134572c72949df6f4c
 					i++;
 					// サポートされていなければ-1が常に返ってくる
 					Log.d(TAG, "face id: " + face.id);
@@ -134,6 +143,9 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 //						faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
 						faceCenterPointX = (rect.right + rect.left)/2;
 						faceCenterPointY = (rect.bottom + rect.top)/2;
+						trashControl(faceCenterPointX,faceCenterPointY);
+						_camera.stopFaceDetection();
+						break;
 					}
 
 					Log.d(TAG, "test" + faceCenterPointX + "," + faceCenterPointY);
@@ -145,7 +157,7 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 						Log.d(TAG, "face leftEye: " + face.leftEye.x + "," + face.leftEye.y);
 						Log.d(TAG, "face rightEye: " + face.rightEye.x + "," + face.rightEye.y);
 					}
-				}*/
+				}
 			}
 		});
 
@@ -200,6 +212,35 @@ public class CameraCallback extends SurfaceView implements Camera.PreviewCallbac
 		return faceConfidence;
 	}
 
+	/*
+	//make the timer
+	Timer timer = new Timer(false);
+	//set the timer schedule
+	timer.schedule(new TimerTask() {
+		@Override
+		public void run() {
+			handler.post(new Runnable() {
+				@Override
+				public void run() {
+					int i = 0;
+					for (Face face : faces) {
+						i++;
+						Rect rect = faceRect2PixelRect(face);
+						if(i == 1){
+//							faceCenterPointX = (face.rect.right + face.rect.left)/2;
+//							faceCenterPointY = (face.rect.bottom + face.rect.top)/2;
+							faceCenterPointX = (rect.right + rect.left)/2;
+							faceCenterPointY = (rect.bottom + rect.top)/2;
+						}
+						trashControl(faceCenterPointX,faceCenterPointY);
+					}
+				}
+			});
+		}
+	}, 100, TIMER_PERIOD);
+	if(faces.length == 0){
+		timer.cancel();
+	}*/
 	public void trashControl(int cenwidth, int cenheight){		
 		Log.d(TAG, "testttttttttttttttttttttt,"+middleX+"vs"+cenwidth+","+middleY+"vs"+cenheight);
 
