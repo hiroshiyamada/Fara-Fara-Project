@@ -55,10 +55,7 @@ public class BluetoothDetecter extends Activity{
 		//Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		
 		// 周辺デバイスの検索開始
-		mBtAdapter.startDiscovery();
-		
-		
-		
+		mBtAdapter.startDiscovery();	
 		//一回のみ
 		
 	}
