@@ -47,11 +47,13 @@ public class ImageProcessingSample extends Activity{
 	String BACK = "4";
 	String STOP = "5";
 	//private final static int TIMER_PERIOD = 100;
-	private final static int ROTATION_PERIOD = 500;
-	private final static int STRAIGHT_PERIOD = 5000;
+	private final static int ROTATION_PERIOD = 1;
+	private final static int STRAIGHT_PERIOD = 1000;
 	private Handler handler = new Handler();
 	private int timeCount=0;
 	CameraCallback mCameraCallback=null;
+	int middleX;
+	int middleY;
 
 	SmartBot mySmartBot;
 
@@ -73,9 +75,9 @@ public class ImageProcessingSample extends Activity{
 		Point size = new Point();
 		disp.getSize(size);
 		//中心のx座標
-		int middleX = size.x;
+		middleX = size.x;
 		//中心のy座標
-		int middleY = size.y;
+		middleY = size.y;
 		//setContentView(R.layout.main);//元々の表示画面をコメントアウト
 		//画面の向きを横で固定
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -104,6 +106,7 @@ public class ImageProcessingSample extends Activity{
 		//独自プレビュー描画画面
 		gView = new GraphicsView(this);
 		addContentView(gView, layoutParams);
+		//trashControl();
 		/*Timer timer = new Timer(false);
 		//set the timer schedule
 		timer.schedule(new TimerTask() {
@@ -120,42 +123,30 @@ public class ImageProcessingSample extends Activity{
 	}
 	int mZoom=0;
 
-	public void trashControl(){
-		//Android画面サイズ取得
-		WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
-		// ディスプレイのインスタンス生成
-		Display disp = wm.getDefaultDisplay();
-		Point size = new Point();
-		disp.getSize(size);
-		//中心のx座標
-		int middleX = size.x;
-		//中心のy座標
-		int middleY = size.y;
-		int diffX = 20;
-		int diffY = 20;
-
-
-		while(diffX > 10 || diffY > 10){
-
-			//顔中心のx座標
-			int cenwidth = mCameraCallback.getFaceCenterPointX();
-			//顔中心のy座標
-			int cenheight = mCameraCallback.getFaceCenterPointY();
-
-			//x座標の差の絶対値
-			diffX = middleX - cenwidth;
-			//y座標の差の絶対値
-			diffY = Math.abs(middleY - cenheight);
-			//横方向に移動
-			if(diffX > 0){
-				moveTrashMotor(LEFT,ROTATION_PERIOD);
-			}else{
-				moveTrashMotor(LEFT,ROTATION_PERIOD);
-			}
-			//縦方向に移動
-			if(diffY > 10){
-				moveTrashMotor(FRONT,STRAIGHT_PERIOD);
-			}
+	public void trashControl(int cenwidth, int cenheight){
+		/*
+		//顔中心のx座標
+		int cenwidth = mCameraCallback.getFaceCenterPointX();
+		//顔中心のy座標
+		int cenheight = mCameraCallback.getFaceCenterPointY();
+		*/
+		//x座標の差の絶対値
+		int diffX = middleX - cenwidth;
+		//y座標の差の絶対値
+		//int diffY = Math.abs(middleY - cenheight);
+		//横方向に移動
+		
+		Log.d("test", "testDiff,"+diffX+","+cenheight);
+		
+		
+		if(diffX > 50){
+			moveTrashMotor(LEFT,ROTATION_PERIOD);
+		}else if(diffX < -50){
+			moveTrashMotor(RIGHT,ROTATION_PERIOD);
+		}
+		//縦方向に移動
+		else if(cenheight > 50){
+			moveTrashMotor(FRONT,STRAIGHT_PERIOD);
 		}
 	}
 
@@ -187,10 +178,12 @@ public class ImageProcessingSample extends Activity{
 			int middleY = size.y;
 
 
-			paint.setTextSize(40);
+			paint.setTextSize(20);
 			paint.setColor(Color.RED);
 			canvas.drawText("画面の中心:"+middleX+":"+middleY,70,100,paint);
+			canvas.drawText("検出している顔:"+mCameraCallback.faceCount,70,150,paint);
 			canvas.drawText("検出した顔の中心:"+mCameraCallback.getFaceCenterPointX()+":"+mCameraCallback.getFaceCenterPointY(),70,200,paint);
+			
 		}
 	}
 	/*
@@ -248,7 +241,7 @@ public class ImageProcessingSample extends Activity{
 		}
 	}
 
-	//左に動かす.
+	//モーターを動かす.
 	public void moveTrashMotor(String num, long time) {
 		sendCommand(num);
 		Log.d("test","moter");
